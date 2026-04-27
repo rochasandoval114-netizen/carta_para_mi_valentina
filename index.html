@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para ti 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Nunito',sans-serif}
+    #app{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient(135deg,#fce4ec,#f8bbd0,#e1bee7,#bbdefb);background-size:400% 400%;animation:bgShift 8s ease infinite;padding:20px;position:relative;overflow:hidden}
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .star{position:absolute;pointer-events:none;font-size:18px;animation:twinkle 2s ease-in-out infinite}
+    @keyframes twinkle{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+    .nav{display:flex;justify-content:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+    .nav-btn{background:rgba(255,255,255,0.7);border:2px solid #f48fb1;border-radius:50px;padding:8px 18px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#c2185b;transition:all .2s}
+    .nav-btn:hover,.nav-btn.active{background:#f48fb1;color:white;transform:scale(1.05)}
+    .section{display:none;animation:fadeIn .5s ease}
+    .section.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    /* CARTA */
+    .envelope-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+    .envelope-scene{width:280px;height:180px;position:relative;cursor:pointer}
+    .envelope-body{width:280px;height:180px;background:#f8bbd0;border-radius:8px;border:3px solid #f48fb1;position:absolute;top:0;left:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .env-lines{position:absolute;bottom:24px;left:28px;right:28px}
+    .env-line{height:3px;background:#f48fb1;border-radius:2px;margin:8px 0;opacity:.4}
+    .env-icon{font-size:44px;z-index:1}
+    .env-flap{position:absolute;top:0;left:0;width:0;height:0;border-left:140px solid transparent;border-right:140px solid transparent;border-top:88px solid #f48fb1;transform-origin:top center;transition:transform .5s ease;z-index:3}
+    .env-flap.open{transform:rotateX(180deg)}
+    .toggle-btn{background:linear-gradient(135deg,#e91e63,#f48fb1);color:white;border:none;border-radius:50px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform .2s}
+    .toggle-btn:hover{transform:scale(1.05)}
+    .carta-content{background:white;border-radius:16px;border:2px solid #f48fb1;padding:28px;max-width:500px;width:100%;max-height:0;overflow:hidden;transition:max-height .6s ease,opacity .4s ease;opacity:0}
+    .carta-content.show{max-height:600px;opacity:1}
+    .carta-title{text-align:center;font-size:22px;font-weight:800;color:#c2185b;margin-bottom:16px}
+    .carta-text{font-size:15px;line-height:1.8;color:#555;text-align:center;margin-bottom:20px}
+    .carta-firma{text-align:right;color:#e91e63;font-weight:700;font-style:italic;font-size:16px}
+    .hearts-deco{font-size:20px;text-align:center;margin:10px 0;letter-spacing:8px}
+
+    /* PROMESAS */
+    .promesas-title{text-align:center;font-size:22px;font-weight:800;color:#7b1fa2;margin-bottom:4px}
+    .promesas-sub{text-align:center;font-size:13px;color:#9c27b0;margin-bottom:10px}
+    .group-label{text-align:center;font-size:18px;margin:16px 0 8px;letter-spacing:4px}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;max-width:580px;margin:0 auto}
+    .flip-card{height:140px;perspective:800px;cursor:pointer}
+    .flip-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .55s ease}
+    .flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+    .flip-front,.flip-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;text-align:center}
+    .flip-front{border:3px solid #ce93d8}
+    .flip-front-icon{font-size:30px;margin-bottom:6px}
+    .flip-front-hint{font-size:11px;color:#9c27b0;font-weight:700}
+    .flip-back{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border:3px solid #f48fb1;transform:rotateY(180deg)}
+    .flip-back-text{font-size:12px;font-weight:700;color:#c2185b;line-height:1.5}
+    .promesas-note{text-align:center;color:#7b1fa2;font-size:12px;background:rgba(243,229,245,.6);border-radius:12px;padding:10px;max-width:400px;margin:16px auto 0}
+
+    /* JUEGOS */
+    .game-area{max-width:500px;margin:0 auto}
+    .game-title{font-size:20px;font-weight:800;color:#1565c0;text-align:center;margin-bottom:6px}
+    .game-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+    .game-tab{background:rgba(255,255,255,.7);border:2px solid #90caf9;border-radius:50px;padding:6px 16px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#1565c0}
+    .game-tab.active{background:#2196f3;color:white;border-color:#2196f3}
+    #catchCanvas{background:linear-gradient(180deg,#e3f2fd,#bbdefb);border-radius:16px;border:3px solid #90caf9;display:block;margin:0 auto;touch-action:none;cursor:none;max-width:100%}
+    .catch-msg{text-align:center;color:#1565c0;font-size:14px;margin-top:8px;font-weight:600}
+    .start-btn,.spawn-btn{display:block;margin:12px auto;background:linear-gradient(135deg,#2196f3,#64b5f6);color:white;border:none;border-radius:50px;padding:10px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform .2s}
+    .spawn-btn{background:linear-gradient(135deg,#4caf50,#81c784)}
+    .start-btn:hover,.spawn-btn:hover{transform:scale(1.05)}
+    #globos-wrap{position:relative;height:300px;overflow:hidden;border-radius:16px;border:3px solid #a5d6a7;background:linear-gradient(180deg,#e8f5e9,#c8e6c9)}
+    .globo{position:absolute;cursor:pointer;font-size:36px;user-select:none;animation:floatUp linear forwards}
+    @keyframes floatUp{from{transform:translateY(0)}to{transform:translateY(-340px)}}
+    #pop-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:16px;border:2px solid #a5d6a7;padding:12px 18px;text-align:center;font-size:13px;font-weight:700;color:#2e7d32;max-width:210px;display:none;z-index:10}
+    .globo-score{text-align:center;color:#2e7d32;font-weight:700;font-size:14px;margin-top:8px}
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="star" style="top:5%;left:8%;animation-delay:0s">✨</div>
+  <div class="star" style="top:10%;right:10%;animation-delay:.5s">🌸</div>
+  <div class="star" style="top:80%;left:5%;animation-delay:1s">💫</div>
+  <div class="star" style="top:75%;right:6%;animation-delay:1.5s">🌷</div>
+  <div class="star" style="top:40%;left:2%;animation-delay:.8s">⭐</div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="showSection('carta',this)">💌 Carta</button>
+    <button class="nav-btn" onclick="showSection('promesas',this)">💫 Promesas</button>
+    <button class="nav-btn" onclick="showSection('juegos',this)">🎮 Juegos</button>
+  </div>
+
+  <!-- CARTA -->
+  <div id="sec-carta" class="section active">
+    <div class="envelope-wrap">
+      <div class="envelope-scene" onclick="toggleCarta()">
+        <div class="envelope-body">
+          <div class="env-lines"><div class="env-line"></div><div class="env-line"></div></div>
+          <div class="env-icon" id="envIcon">💌</div>
+        </div>
+        <div class="env-flap" id="flap"></div>
+      </div>
+      <button class="toggle-btn" onclick="toggleCarta()" id="toggleBtn">Abrir carta 🎀</button>
+      <div class="carta-content" id="carta">
+        <div class="hearts-deco">🌸💕🌸💕🌸</div>
+        <div class="carta-title">Para ti, mi amor 💖</div>
+        <div class="carta-text">
+          Puede que llevemos poco tiempo juntos,<br>
+          pero en estos días he descubierto algo hermoso:<br><br>
+          que el tiempo no mide lo que uno siente.<br><br>
+          Cada momento contigo ya es<br>
+          uno de mis favoritos de toda la vida. 🌷<br><br>
+          No sé qué depara el futuro,<br>
+          pero sé que quiero seguir conociéndote,<br>
+          seguir haciéndote sonreír<br>
+          y estar ahí para ti. 🫶<br><br>
+          Gracias por dejarme entrar a tu vida<br>
+          y por hacer la mía mucho más bonita. ✨
+        </div>
+        <div class="hearts-deco">💗💗💗</div>
+        <div class="carta-firma">Con todo mi amor, yo 🌹</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMESAS -->
+  <div id="sec-promesas" class="section">
+    <div class="promesas-title">💫 Mis promesas para ti</div>
+    <div class="promesas-sub">Toca cada tarjeta para descubrir una promesa 🌸</div>
+    <div id="promesasWrap"></div>
+    <div class="promesas-note">💜 Cada una viene del corazón. Pienso cumplirlas todas 🌹</div>
+  </div>
+
+  <!-- JUEGOS -->
+  <div id="sec-juegos" class="section">
+    <div class="game-area">
+      <div class="game-title">🎮 Juegos de amor 💕</div>
+      <div class="game-tabs">
+        <button class="game-tab active" onclick="switchGame('catch',this)">💖 Atrapa corazones</button>
+        <button class="game-tab" onclick="switchGame('globos',this)">🎈 Globos de amor</button>
+      </div>
+      <div id="game-catch">
+        <canvas id="catchCanvas" width="460" height="270"></canvas>
+        <div class="catch-msg" id="catchMsg">¡Atrapa los corazones que caen! 💖</div>
+        <button class="start-btn" id="startBtn" onclick="startCatch()">Empezar 💘</button>
+      </div>
+      <div id="game-globos" style="display:none">
+        <div id="globos-wrap"><div id="globos-container"></div><div id="pop-msg"></div></div>
+        <div class="globo-score" id="globo-score">Explota los globos para ver mensajes 🎈</div>
+        <button class="spawn-btn" onclick="spawnGlobos()">¡Lanzar globos! 🎈</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const grupos = [
+  { emoji: '🌙', color: '#f0e6ff', cards: [
+    'Quedarme incluso cuando no tenga todas las respuestas.',
+    'Cuidarte sin hacerte sentir débil.',
+    'Hablar las cosas antes de dejar que se rompan.',
+    'No ignorar lo que te duele.',
+    'Hacerte reír cuando más lo necesites.',
+  ]},
+  { emoji: '✨', color: '#e8f4ff', cards: [
+    'No acostumbrarme a ti como si fueras algo cualquiera.',
+    'Seguir conquistándote aunque ya seas mía.',
+    'Darte tu lugar siempre, estés o no presente.',
+    'No fallarte en lo que sé que es importante para ti.',
+    'No dejar que un mal día arruine lo que somos.',
+  ]},
+  { emoji: '🌹', color: '#fff0f3', cards: [
+    'Buscar soluciones contigo, no culpables.',
+    'No irme a dormir enojado sin intentar arreglarlo.',
+    'Abrazarte hasta que todo se sienta un poco mejor.',
+    'Hacerte sentir segura con lo que digo y hago.',
+    'Demostrarte con hechos lo que siento por ti.',
+  ]},
+  { emoji: '💭', color: '#e8fff0', cards: [
+    'Valorar cada momento contigo, incluso los más simples.',
+    'No competir contigo, sino crecer a tu lado.',
+    'Apoyarte aunque no entienda todo al principio.',
+    'Cuidar tu corazón como algo que no quiero perder.',
+    'No cambiar por alguien más, sino mejorar por nosotros.',
+  ]},
+  { emoji: '💙', color: '#e6f0ff', cards: [
+    'No dejar que la rutina apague lo que siento por ti.',
+    'Sorprenderte de vez en cuando, sin razón especial.',
+    'Ser honesto contigo incluso cuando sea difícil.',
+    'Aprender de mis errores para no repetirlos contigo.',
+    'No soltarte en medio del caos.',
+  ]},
+  { emoji: '🌌', color: '#f5e6ff', cards: [
+    'Estar para ti, incluso en los días en que no quieras a nadie cerca.',
+    'No hacerte sentir menos por tus inseguridades.',
+    'Respetar tus tiempos y tus espacios.',
+    'Cuidarte sin invadirte.',
+    'Elegirte sin dudar.',
+  ]},
+  { emoji: '🌟', color: '#fff8e6', cards: [
+    'No perder los detalles que te hacen única.',
+    'Hacerte sentir especial sin necesidad de fechas.',
+    'No dar por hecho que siempre estarás.',
+    'Luchar por lo nuestro cuando realmente valga la pena.',
+    'Hacer de lo nuestro algo que siempre se sienta real.',
+  ]},
+];
+
+const frontColors = ['#f3e5f5','#e8eaf6','#fce4ec','#e8f5e9','#e3f2fd','#fff8e1','#f8eaf4'];
+const borderColors = ['#ce93d8','#9fa8da','#f48fb1','#a5d6a7','#90caf9','#ffe082','#f06292'];
+
+const wrap = document.getElementById('promesasWrap');
+grupos.forEach((g, gi) => {
+  wrap.innerHTML += `<div class="group-label">${g.emoji}</div>
+  <div class="cards-grid">${g.cards.map((texto) => `
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front" style="background:${frontColors[gi]};border-color:${borderColors[gi]}">
+          <div class="flip-front-icon">🤍</div>
+          <div class="flip-front-hint">Toca para ver ✨</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">Prometo ${texto} 💕</div>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+});
+
+let cartaOpen = false;
+function toggleCarta() {
+  cartaOpen = !cartaOpen;
+  document.getElementById('flap').classList.toggle('open', cartaOpen);
+  document.getElementById('carta').classList.toggle('show', cartaOpen);
+  document.getElementById('envIcon').textContent = cartaOpen ? '💝' : '💌';
+  document.getElementById('toggleBtn').textContent = cartaOpen ? 'Cerrar carta 🌸' : 'Abrir carta 🎀';
+}
+function showSection(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+let catchRunning=false,catchScore=0,catchTimer=0,catchInterval,hearts=[],basketX=230;
+const canvas=document.getElementById('catchCanvas'),ctx=canvas.getContext('2d'),cw=canvas.width,ch=canvas.height;
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();basketX=e.clientX-r.left});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();const r=canvas.getBoundingClientRect();basketX=e.touches[0].clientX-r.left},{passive:false});
+function startCatch(){
+  if(catchRunning)return;catchRunning=true;catchScore=0;catchTimer=20;hearts=[];
+  document.getElementById('startBtn').style.display='none';
+  catchInterval=setInterval(catchLoop,1000/30);
+  const ti=setInterval(()=>{if(!catchRunning){clearInterval(ti);return}catchTimer--;if(catchTimer<=0)endCatch()},1000);
+  const si=setInterval(()=>{if(!catchRunning){clearInterval(si);return}hearts.push({x:Math.random()*(cw-30)+15,y:-20,speed:2+Math.random()*2,e:['💖','💗','💕','💓','💘'][Math.floor(Math.random()*5)]})},800);
+}
+function catchLoop(){
+  ctx.clearRect(0,0,cw,ch);
+  ctx.fillStyle='#f48fb1';ctx.beginPath();
+  if(ctx.roundRect)ctx.roundRect(basketX-45,ch-38,90,28,10);else ctx.rect(basketX-45,ch-38,90,28);
+  ctx.fill();
+  ctx.font='18px serif';ctx.textAlign='center';ctx.fillText('🧺',basketX,ch-17);
+  ctx.font='22px serif';
+  hearts=hearts.filter(h=>{h.y+=h.speed;ctx.fillText(h.e,h.x,h.y);if(h.y>ch-18&&Math.abs(h.x-basketX)<52){catchScore++;return false}return h.y<ch+20});
+  ctx.fillStyle='#c2185b';ctx.font='bold 14px Nunito';ctx.textAlign='left';ctx.fillText('💖 '+catchScore,14,24);
+  ctx.textAlign='right';ctx.fillText('⏱ '+catchTimer+'s',cw-14,24);
+}
+function endCatch(){
+  catchRunning=false;clearInterval(catchInterval);
+  const m=catchScore>=20?'¡Increíble! 🏆':catchScore>=10?'¡Muy bien! 💕':'¡Sigue intentando! 🌸';
+  document.getElementById('catchMsg').textContent='¡Tiempo! Atrapaste '+catchScore+' corazones. '+m;
+  const b=document.getElementById('startBtn');b.textContent='Jugar de nuevo 💘';b.style.display='block';
+}
+function switchGame(g,btn){
+  document.querySelectorAll('.game-tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('game-catch').style.display=g==='catch'?'block':'none';
+  document.getElementById('game-globos').style.display=g==='globos'?'block':'none';
+}
+const loveMessages=['Me encantas muchísimo 💕','Eres la mejor parte de mi día 🌞','Tu sonrisa me vuelve loco/a 😍','Gracias por existir 🌸','Me haces muy feliz 💖','Eres increíble 🌟','Quiero seguir conociéndote 🫶','Cada día contigo vale todo ✨','Me alegras el corazón 💗','Eres hermosa por dentro y por fuera 🌷'];
+let globoCount=0;
+function spawnGlobos(){
+  document.getElementById('globos-container').innerHTML='';globoCount=0;
+  const icons=['💖','💗','💕','💓','💘','🎈','🎀','💝','🌸','🌷'];
+  for(let i=0;i<8;i++)setTimeout(()=>{
+    const b=document.createElement('div');b.className='globo';
+    const msg=loveMessages[Math.floor(Math.random()*loveMessages.length)];
+    b.textContent=icons[Math.floor(Math.random()*icons.length)];
+    b.style.left=(8+Math.random()*80)+'%';b.style.bottom='0';
+    b.style.animationDuration=(5+Math.random()*4)+'s';
+    b.onclick=()=>{b.style.display='none';globoCount++;const pm=document.getElementById('pop-msg');pm.textContent=msg;pm.style.display='block';document.getElementById('globo-score').textContent='¡Descubriste '+globoCount+' mensaje'+(globoCount>1?'s':'')+'! 💕';setTimeout(()=>pm.style.display='none',2200)};
+    document.getElementById('globos-container').appendChild(b);
+  },i*200);
+  document.getElementById('globo-score').textContent='Toca los globos para ver mensajes 🎈';
+}
+</script>
+</body>
+</html>
